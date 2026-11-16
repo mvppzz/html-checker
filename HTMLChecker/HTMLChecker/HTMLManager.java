@@ -31,4 +31,49 @@ public class HTMLManager {
 
         return result.toString();
     }
+
+    // fixes html tags that dont match or are missing
+    public void fixHTML() {
+        Stack<HTMLTag> openTags = new Stack<HTMLTag>();
+        Queue<HTMLTag> fixedTags = new LinkedList<HTMLTag>();
+
+        // goes thru each tag
+        while (!tags.isEmpty()) {
+            HTMLTag current = tags.remove();
+
+            // self closing tags dont need another tag
+            if (current.isSelfClosing()) {
+                fixedTags.add(current);
+            }
+
+            // adds opening tags to queue n stack
+            else if (current.isOpening()) {
+                fixedTags.add(current);
+                openTags.push(current);
+            }
+
+            // checks if closing tags match
+            else if (current.isClosing()) {
+                while (!openTags.isEmpty() &&
+                       !openTags.peek().matches(current)) {
+                    fixedTags.add(openTags.pop().getMatching());
+                }
+
+                // adds closing tag if it matches
+                if (!openTags.isEmpty()) {
+                    openTags.pop();
+                    fixedTags.add(current);
+                }
+                // skips extra closing tags
+            }
+        }
+
+        // closes any tags still in stack
+        while (!openTags.isEmpty()) {
+            fixedTags.add(openTags.pop().getMatching());
+        }
+
+        // updates queue with the fixed tags
+        tags = fixedTags;
+    }
 }
