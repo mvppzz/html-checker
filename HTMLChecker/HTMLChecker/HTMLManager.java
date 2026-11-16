@@ -17,4 +17,18 @@ public class HTMLManager {
     public Queue<HTMLTag> getTags() {
         return tags;
     }
+
+    // turns all the html tags into one string
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        int size = tags.size();
+
+        for (int i = 0; i < size; i++) {
+            HTMLTag tag = tags.remove();
+            result.append(tag.toString().trim());
+            tags.add(tag);
+        }
+
+        return result.toString();
+    }
 }
