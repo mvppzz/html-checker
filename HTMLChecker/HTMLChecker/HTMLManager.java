@@ -12,4 +12,9 @@ public class HTMLManager {
 
         tags = new LinkedList<HTMLTag>(html);
     }
+
+    // gets the tags from queue
+    public Queue<HTMLTag> getTags() {
+        return tags;
+    }
 }
